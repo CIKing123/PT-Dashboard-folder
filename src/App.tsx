@@ -5,7 +5,6 @@ import EmployeeDetailsScreen from './screens/EmployeeDetailsScreen';
 import CreateEmployeeScreen from './screens/CreateEmployeeScreen';
 import EditEmployeeScreen from './screens/EditEmployeeScreen';
 import { Employee } from './types/Employee';
-import { updateEmployeeData } from './services/excelService';
 
 function App(): React.ReactElement {
   const [currentPage, setCurrentPage] = useState<string>('home');

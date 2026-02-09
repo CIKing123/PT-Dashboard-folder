@@ -6,7 +6,7 @@ export interface EmployeeData {
   jobRole: string;
   department: string;
   startDate: string;
-  salary: number;
+  salary: string;
   employmentType: string;
   status: 'Active' | 'On Leave' | 'Inactive';
   address: string;

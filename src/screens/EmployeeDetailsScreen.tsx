@@ -22,7 +22,7 @@ const EmployeeDetailsScreen: React.FC<EmployeeDetailsScreenProps> = ({
       jobRole: 'Physical Therapist',
       department: 'Therapy',
       startDate: '2022-01-15',
-      salary: 65000,
+      salary: '65000',
       employmentType: 'Full-time',
       status: 'Active',
       address: '123 Main St',
@@ -43,7 +43,7 @@ const EmployeeDetailsScreen: React.FC<EmployeeDetailsScreenProps> = ({
       jobRole: 'Therapist Assistant',
       department: 'Therapy',
       startDate: '2021-06-20',
-      salary: 45000,
+      salary: '45000',
       employmentType: 'Full-time',
       status: 'Active',
       address: '456 Oak Ave',
@@ -64,7 +64,7 @@ const EmployeeDetailsScreen: React.FC<EmployeeDetailsScreenProps> = ({
       jobRole: 'Administrative Staff',
       department: 'Admin',
       startDate: '2020-03-10',
-      salary: 38000,
+      salary: '38000',
       employmentType: 'Full-time',
       status: 'On Leave',
       address: '789 Pine Rd',
@@ -86,7 +86,7 @@ const EmployeeDetailsScreen: React.FC<EmployeeDetailsScreenProps> = ({
     jobRole: '',
     department: 'Admin',
     startDate: '',
-    salary: 0,
+    salary: '',
     employmentType: 'Full-time',
     status: 'Active' as const,
     address: '',
@@ -116,7 +116,6 @@ const EmployeeDetailsScreen: React.FC<EmployeeDetailsScreenProps> = ({
     const newEmployee: Employee = {
       id: employees.length + 1,
       ...formData,
-      salary: typeof formData.salary === 'string' ? parseInt(formData.salary) : formData.salary,
       status: formData.status as 'Active' | 'On Leave' | 'Inactive',
     };
     setEmployees([...employees, newEmployee]);
@@ -128,7 +127,7 @@ const EmployeeDetailsScreen: React.FC<EmployeeDetailsScreenProps> = ({
       jobRole: '',
       department: 'Admin',
       startDate: '',
-      salary: 0,
+      salary: '',
       employmentType: 'Full-time',
       status: 'Active',
       address: '',
@@ -321,7 +320,7 @@ const EmployeeDetailsScreen: React.FC<EmployeeDetailsScreenProps> = ({
                 <div className="form-group">
                   <label htmlFor="salary">Salary *</label>
                   <input
-                    type="number"
+                    type="text"
                     id="salary"
                     name="salary"
                     value={formData.salary}
