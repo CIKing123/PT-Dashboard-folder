@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/EmployeeDetailsScreen.css';
 import type { Employee } from '../types/Employee';
+import { saveEmployeeData, fetchEmployees } from '../services/excelService';
 
 interface EmployeeDetailsScreenProps {
   onBack: () => void;
@@ -99,6 +100,21 @@ const EmployeeDetailsScreen: React.FC<EmployeeDetailsScreenProps> = ({
     passportPhoto: '',
   });
 
+  // Load employees from Google Sheets on mount
+  useEffect(() => {
+    const loadEmployees = async () => {
+      try {
+        const sheetEmployees = await fetchEmployees();
+        if (sheetEmployees && sheetEmployees.length > 0) {
+          setEmployees(sheetEmployees as Employee[]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch employees from Google Sheets:', error);
+      }
+    };
+    loadEmployees();
+  }, []);
+
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -111,13 +127,22 @@ const EmployeeDetailsScreen: React.FC<EmployeeDetailsScreenProps> = ({
     }));
   };
 
-  const handleCreateEmployee = (e: React.FormEvent) => {
+  const handleCreateEmployee = async (e: React.FormEvent) => {
     e.preventDefault();
     const newEmployee: Employee = {
       id: employees.length + 1,
       ...formData,
       status: formData.status as 'Active' | 'On Leave' | 'Inactive',
     };
+    
+    // Save to Google Sheets
+    const saved = await saveEmployeeData(formData);
+    if (saved) {
+      console.log('Employee saved to Google Sheets');
+    } else {
+      console.warn('Failed to save employee to Google Sheets, saved locally only');
+    }
+    
     setEmployees([...employees, newEmployee]);
     setFormData({
       firstName: '',
