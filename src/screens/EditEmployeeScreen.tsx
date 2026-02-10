@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { updateEmployeeData } from "../services/excelService";
-import type { EmployeeData } from "../services/excelService";
+import { updateEmployeeData, EmployeeData } from "../services/excelService";
 
 interface EditEmployeeScreenProps {
   employee: EmployeeData & { id: number };
@@ -37,13 +36,48 @@ const EditEmployeeScreen: React.FC<EditEmployeeScreenProps> = ({
       <h1>Edit Employee</h1>
 
       <form onSubmit={handleSubmit} className="employee-form">
-        <input name="firstName" value={formData.firstName} onChange={handleChange} />
-        <input name="lastName" value={formData.lastName} onChange={handleChange} />
-        <input name="email" value={formData.email} onChange={handleChange} />
-        <input name="phone" value={formData.phone} onChange={handleChange} />
-        <input name="jobRole" value={formData.jobRole} onChange={handleChange} />
+        <div className="form-section">
+          <div className="form-group">
+            <label htmlFor="name">Name</label>
+            <input name="name" id="name" value={formData.name} onChange={handleChange} />
+          </div>
 
-        {/* reuse the rest of your form exactly like CreateEmployeeScreen */}
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input name="email" id="email" type="email" value={formData.email} onChange={handleChange} />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="position">Position</label>
+            <input name="position" id="position" value={formData.position} onChange={handleChange} />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="department">Department</label>
+            <select name="department" id="department" value={formData.department} onChange={handleChange}>
+              <option value="">Select Department</option>
+              <option value="Therapy">Therapy</option>
+              <option value="Admin">Admin</option>
+              <option value="Billing">Billing</option>
+              <option value="Support">Support</option>
+              <option value="Management">Management</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="status">Status</label>
+            <select name="status" id="status" value={formData.status} onChange={handleChange}>
+              <option value="Active">Active</option>
+              <option value="On Leave">On Leave</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="passportPhoto">Passport Photo URL</label>
+            <input name="passportPhoto" id="passportPhoto" value={formData.passportPhoto || ''} onChange={handleChange} />
+          </div>
+        </div>
 
         <div className="form-actions">
           <button type="submit" disabled={saving}>

@@ -1,52 +1,48 @@
 /**
  * Excel (Google Sheets) Integration Service
- * Uses Google Apps Script Web App (Webhook)
+ * Uses Sheety API (No backend needed!)
  * SAFE for frontend usage
  */
 
 export interface EmployeeData {
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
-  phone: string;
-  jobRole: string;
+  position: string;
   department: string;
-  startDate: string;
-  salary: string;
-  employmentType: string;
   status: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  emergencyContact: string;
-  emergencyPhone: string;
-  qualifications: string;
+  passportPhoto?: string;
 }
 
-// Your deployed Apps Script Web App URL
-const SHEET_WEBHOOK_URL =
-  "https://script.google.com/macros/s/AKfycbyUKD48gM3YKDHGM6qZRrywcB-EdnMIKV0kRwyrvGUq-Wpsz6uKlF9ET95dKZT84lTL/exec";
+// Your Sheety API URL - Replace with your actual URL from sheety.co
+const SHEETY_API_URL =
+  "https://api.sheety.co/a0f39351ff632bc3838e0d85a999dba8/ptEmployeeData/sheet1";
 
 /**
- * Save employee data to Google Sheets
+ * Save employee data to Google Sheets via Sheety
  */
 export async function saveEmployeeData(
   data: EmployeeData
 ): Promise<boolean> {
   try {
-    const response = await fetch(SHEET_WEBHOOK_URL, {
+    console.log("Sending employee data to Sheety:", SHEETY_API_URL);
+    console.log("Data being sent:", data);
+    
+    const response = await fetch(SHEETY_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ sheet1: data }),
     });
 
+    console.log("Response status:", response.status);
     const result = await response.json();
-    return result.success === true;
+    console.log("Server response:", result);
+    
+    return response.ok;
   } catch (error) {
     console.error("Failed to save employee:", error);
+    alert(`Error saving employee: ${error}`);
     return false;
   }
 }
@@ -56,16 +52,15 @@ export async function updateEmployeeData(
 ): Promise<boolean> {
   try {
     const response = await fetch(
-      `${SHEET_WEBHOOK_URL}?action=update`,
+      `${SHEETY_API_URL}/${data.id}`,
       {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ sheet1: data }),
       }
     );
 
-    const result = await response.json();
-    return result.success === true;
+    return response.ok;
   } catch (error) {
     console.error("Failed to update employee:", error);
     return false;
@@ -73,23 +68,37 @@ export async function updateEmployeeData(
 }
 
 /**
- * Fetch all employees from Google Sheets
+ * Fetch all employees from Google Sheets via Sheety
  */
 export async function fetchEmployees(): Promise<(EmployeeData & { id: number })[]> {
   try {
-    const response = await fetch(
-      `${SHEET_WEBHOOK_URL}?action=fetch`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    const response = await fetch(SHEETY_API_URL, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
 
     const result = await response.json();
-    return result.data || [];
+    return result.sheet1 || [];
   } catch (error) {
     console.error("Failed to fetch employees:", error);
     return [];
+  }
+}
+
+/**
+ * Delete an employee from Google Sheets via Sheety
+ */
+export async function deleteEmployeeData(id: number): Promise<boolean> {
+  try {
+    const response = await fetch(`${SHEETY_API_URL}/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error("Failed to delete employee:", error);
+    return false;
   }
 }
 
