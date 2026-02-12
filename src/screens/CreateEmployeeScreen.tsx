@@ -66,6 +66,7 @@ const CreateEmployeeScreen: React.FC<CreateEmployeeScreenProps> = ({
       }, 2000);
     } catch (error) {
       console.error('Error saving employee:', error);
+      
     }
   };
 
